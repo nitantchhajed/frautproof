@@ -4,13 +4,13 @@ import { Table, Container, Button } from "react-bootstrap"
 import Web3 from "web3";
 import { challengeABI } from "../../../challengeContract";
 import { useAccount } from "wagmi"
-const TxTable = ({ sentTxn }) => {  
+const TxTable = ({ sentTxn }) => {
     const { address } = useAccount();
     const web3 = new Web3(window.ethereum)
     const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS
     const CONTRACT_INSTANCE = new web3.eth.Contract(challengeABI, contractAddress)
     const challengeTxn = async (id) => {
-        const challenge =  await CONTRACT_INSTANCE.methods.revertTransactions(id);
+        const challenge = await CONTRACT_INSTANCE.methods.revertTransaction(id).send({ from: address });
         console.log("challenge", challenge);
     }
     return (
@@ -43,7 +43,7 @@ const TxTable = ({ sentTxn }) => {
                                             <td>{convertTime}</td>
                                             <td>{Web3.utils.fromWei(amount, "ether").toString()} ETH</td>
                                             <td>{isCompleted ? "true" : "false"}</td>
-                                            <td><div className="challenge_btn_wrap"><Button type="button" className="btn challenge_btn" onClick={()=>challengeTxn(id)}>Challenge</Button></div></td>
+                                            <td>{!isCompleted && <div className="challenge_btn_wrap"><Button type="button" className="btn challenge_btn" onClick={() => challengeTxn(id)}>Challenge</Button></div>}</td>
                                         </tr>
                                     )
                                 })

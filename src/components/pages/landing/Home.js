@@ -18,11 +18,7 @@ const Home = () => {
     const [recipient, setRecipient] = useState("")
     const [ethValue, setEthValue] = useState("")
     const [sentTxn, setSentTxn] = useState([])
-    useEffect(() => {
-
-    }, [])
-
-
+    
     //=========================================================== CONTRACT ============================================================
     const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS
     const contractABI = challengeABI
