@@ -1,0 +1,27 @@
+.txTable_wrap {
+    .table {
+
+        thead,
+        tbody {
+            tr {
+
+                th,
+                td {
+                    color: var(--light-color);
+                    background-color: transparent;
+                }
+            }
+        }
+    }
+
+    .challenge_btn_wrap {
+        .challenge_btn {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 2px 5px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    }
+}
