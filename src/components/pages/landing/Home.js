@@ -62,7 +62,6 @@ const Home = () => {
     //Use Effect - fetching the Sent and received Transaction Data Array
     useEffect(() => {
         sender()
-        received()
     }, [])
 
     //------------------------------------------------------------------------------------------------------------------------------------
@@ -84,27 +83,6 @@ const Home = () => {
 
     //--------------------------------------------------------------------------------------------------------------------------------------------
 
-
-    //=========================================================== REVERT TRANSACTION =============================================================
-
-    async function challengeTxn() {
-        const challenge = await CONTRACT_INSTANCE.methods.revertTransaction(id).send({ from: WalletAddress })
-        console.log({ challenge });
-    }
-
-    //--------------------------------------------------------------------------------------------------------------------------------------------
-
-
-    //=========================================================== CLAIM TRANSACTION =============================================================
-
-    async function claim() {
-        const claimTxn = await CONTRACT_INSTANCE.methods.claimTransaction(id).send({ from: WalletAddress })
-        console.log({ claimTxn });
-    }
-
-    //--------------------------------------------------------------------------------------------------------------------------------------------
-
-
     //=========================================================== SENDER TRANSACTION DATA =============================================================
 
     const sender = async () => {
@@ -123,20 +101,7 @@ const Home = () => {
     //--------------------------------------------------------------------------------------------------------------------------------------------
 
 
-    //=========================================================== RECEIVER TRANSACTION DATA =============================================================
 
-    const received = async () => {
-        const receiverData = await CONTRACT_INSTANCE.methods.viewTransactionsByRecipient().call({ from: address })
-        let receivedTxnData = []
-        for (let index = 0; index < receiverData.length; index++) {
-            const element = receiverData[index];
-            const TxnData = await CONTRACT_INSTANCE.methods.allTransactions(element).call({ from: address })
-            receivedTxnData.push(TxnData)
-        }
-        console.log("receivedTxnData", receivedTxnData);
-    }
-
-    //--------------------------------------------------------------------------------------------------------------------------------------------
 
 
 

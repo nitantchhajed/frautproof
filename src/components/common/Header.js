@@ -91,7 +91,7 @@ const HeaderNew = () => {
                                                     </OverlayTrigger>
                                                     </h4>
                                                 </div>
-                                                <Dropdown.Item as={Link} to="/history"><AiOutlineDownload /> View History</Dropdown.Item>
+                                                <Dropdown.Item as={Link} to="/claim"><AiOutlineDownload /> View History</Dropdown.Item>
                                                 <Dropdown.Item onClick={() => handleDisconnect()}><BiPowerOff /> Disconnect</Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown>
