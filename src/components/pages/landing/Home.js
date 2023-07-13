@@ -13,7 +13,8 @@ const Home = () => {
     //============================================================== HOOKS ===============================================================
     const web3 = new Web3(window.ethereum)
     const { address, isConnected } = useAccount();
-    const { chain, chains } = useNetwork()
+    const { chain, chains } = useNetwork();
+    const [sendStatus, setSendStatus] = useState(false)
     const { connect } = useConnect({
         connector: new InjectedConnector({ chains }),
     })
@@ -62,7 +63,7 @@ const Home = () => {
     //Use Effect - fetching the Sent and received Transaction Data Array
     useEffect(() => {
         sender()
-    }, [])
+    }, [address, sendStatus])
 
     //------------------------------------------------------------------------------------------------------------------------------------
 
@@ -75,7 +76,7 @@ const Home = () => {
             console.log(toWaiValue, address);
             const send = await CONTRACT_INSTANCE.methods.sendFunds(recipient).send({ from: address, value: toWaiValue })
             console.log({ send });
-
+            setSendStatus(true)
         } catch (error) {
             console.log(error);
         }
@@ -99,13 +100,6 @@ const Home = () => {
     }
 
     //--------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
 
     return (
         <>

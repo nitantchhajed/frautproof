@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "../../assets/style/common/header.scss"
 import { Navbar, Container, Nav, Image, Dropdown, OverlayTrigger, Tooltip } from "react-bootstrap";
 import logo from "../../assets/images/logo.png";
@@ -19,7 +19,12 @@ const HeaderNew = () => {
         connector: new InjectedConnector({ chains }),
     })
     const handleDisconnect = async () => {
-        disconnect()
+        try {
+            await disconnect()
+            
+        } catch (error) {
+            console.log(error);
+        }
     }
     const handleSourceCopy = () => {
         if (copyTextSourceCode === "Copy address to clipboard") {
@@ -45,9 +50,12 @@ const HeaderNew = () => {
             console.log('Success', data)
         },
     })
-    const handleSwitch = () => {
-        switchNetwork(90001)
-    }
+    useEffect(() => {
+        if (chain?.id !== 90001) {
+            switchNetwork(90001)
+        }
+    }, [chain])
+
     return (
         <>
             <header className='app_header'>
@@ -81,7 +89,7 @@ const HeaderNew = () => {
                                                     <figure className='user_profile'>
                                                         <Image src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAsElEQVRYR2PslBX+z4AHHLiVgiLroDYHn3IGUtUzjjpg0IUAehyiRzipaYCQfow0MOoAuoeA5/dylHIAPY7RHWSt9Q5vOXD0mhDecgPdPMZRBwx4CJBaEOFNAFgkCZUbJNcFow4YDYHREBjwEKC0LkD3AMnlwKgDqB4CLYqpKO0BQvX5b5YgvOmQ9c86FHlC7QnGUQcMeAigN0jQIxg90aGnEUrVY7QJKTWQVAePOgAAXAoAZIiZ6M4AAAAASUVORK5CYII=' alt="Profile Icon" />
                                                     </figure>
-                                                    <h4>   {address} <OverlayTrigger
+                                                    <h4>    {address.slice(0, 5)}...{address.slice(-5)} <OverlayTrigger
                                                         placement="top"
                                                         delay={{ show: 250, hide: 250 }}
                                                         overlay={renderTooltip}>

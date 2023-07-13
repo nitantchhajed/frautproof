@@ -1,24 +1,36 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import "../../../assets/style/pages/landing/txTable.scss";
 import { Table, Container, Button } from "react-bootstrap"
 import Web3 from "web3";
 import { challengeABI } from "../../../challengeContract";
-import { useAccount } from "wagmi"
+import { useAccount } from "wagmi";
+import { AiOutlineCheck } from "react-icons/ai"
 const TxTable = ({ sentTxn }) => {
     const { address } = useAccount();
     const web3 = new Web3(window.ethereum)
+    const [claimStatus, setClaimStatus] = useState(false)
     const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS
     const CONTRACT_INSTANCE = new web3.eth.Contract(challengeABI, contractAddress)
+
+    //======================================================== REVERT TRANSACTION =============================================
+
     const challengeTxn = async (id) => {
-        const challenge = await CONTRACT_INSTANCE.methods.revertTransaction(id).send({ from: address });
-        console.log("challenge", challenge);
+        try {
+            const challenge = await CONTRACT_INSTANCE.methods.revertTransaction(id).send({ from: address });
+            console.log("challenge", challenge);
+            setClaimStatus(true)
+        } catch (error) {
+            console.log(error);
+        }
     }
+
+    //--------------------------------------------------------------------------------------------------------------------------
     return (
         <>
             <section className="txTable_wrap">
                 <Container fluid>
                     <div className="txTable-title">
-                        <h6 className="text-light">RECENT TRANSACTION</h6>
+                        <h6 className="text-light">SENT TRANSACTIONS</h6>
                     </div>
                     <Table responsive>
                         <thead>
@@ -42,8 +54,8 @@ const TxTable = ({ sentTxn }) => {
                                             <td>{recipient}</td>
                                             <td>{convertTime}</td>
                                             <td>{Web3.utils.fromWei(amount, "ether").toString()} ETH</td>
-                                            <td>{isCompleted ? "true" : "false"}</td>
-                                            <td>{!isCompleted && <div className="challenge_btn_wrap"><Button type="button" className="btn challenge_btn" onClick={() => challengeTxn(id)}>Challenge</Button></div>}</td>
+                                            <td>{isCompleted ? "Claimed" : "Not Claimed"}</td>
+                                            <td>{!isCompleted ? <div className="challenge_btn_wrap"><Button type="button" className="btn challenge_btn" onClick={() => challengeTxn(id)}>Challenge</Button></div> : <span className='checkIcn'><AiOutlineCheck /></span>}</td>
                                         </tr>
                                     )
                                 })
