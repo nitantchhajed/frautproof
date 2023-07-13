@@ -54,7 +54,7 @@ const TxTable = ({ sentTxn }) => {
                                             <td>{recipient}</td>
                                             <td>{convertTime}</td>
                                             <td>{Web3.utils.fromWei(amount, "ether").toString()} ETH</td>
-                                            <td>{isCompleted ? "Claimed" : "Not Claimed"}</td>
+                                            <td>{isCompleted ? "Challenged" : "Not Challenged"}</td>
                                             <td>{!isCompleted ? <div className="challenge_btn_wrap"><Button type="button" className="btn challenge_btn" onClick={() => challengeTxn(id)}>Challenge</Button></div> : <span className='checkIcn'><AiOutlineCheck /></span>}</td>
                                         </tr>
                                     )
