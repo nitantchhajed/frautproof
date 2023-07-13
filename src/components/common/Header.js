@@ -21,7 +21,7 @@ const HeaderNew = () => {
     const handleDisconnect = async () => {
         try {
             await disconnect()
-            
+
         } catch (error) {
             console.log(error);
         }
@@ -55,7 +55,6 @@ const HeaderNew = () => {
             switchNetwork(90001)
         }
     }, [chain])
-
     return (
         <>
             <header className='app_header'>
