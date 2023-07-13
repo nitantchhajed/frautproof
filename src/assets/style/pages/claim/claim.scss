@@ -1,5 +1,18 @@
 .claimTable_wrap {
+    .claimTable-title {
+        border: 1px solid #fff;
+        padding: 10px 10px;
+        border-bottom: none;
+
+        h6 {
+            font-size: 24px;
+            display: inline-block;
+            border-bottom: 2px solid #fff;
+        }
+    }
+
     .table {
+        border: 1px solid #fff;
 
         thead,
         tbody {

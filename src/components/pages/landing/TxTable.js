@@ -5,6 +5,7 @@ import Web3 from "web3";
 import { challengeABI } from "../../../challengeContract";
 import { useAccount } from "wagmi";
 import { AiOutlineCheck } from "react-icons/ai"
+import { Link } from "react-router-dom";
 const TxTable = ({ sentTxn }) => {
     const { address } = useAccount();
     const web3 = new Web3(window.ethereum)
@@ -51,7 +52,7 @@ const TxTable = ({ sentTxn }) => {
                                     const convertTime = new Date(timeToNumber).toLocaleString('en-US')
                                     return (
                                         <tr key={key}>
-                                            <td>{recipient}</td>
+                                            <td><Link to={`https://testnet.racescan.io/address/${recipient}`} target="_blank" className="wallet_address">{recipient}</Link></td>
                                             <td>{convertTime}</td>
                                             <td>{Web3.utils.fromWei(amount, "ether").toString()} ETH</td>
                                             <td>{isCompleted ? "Challenged" : "Not Challenged"}</td>

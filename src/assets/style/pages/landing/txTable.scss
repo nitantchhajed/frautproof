@@ -1,6 +1,21 @@
 .txTable_wrap {
-    .table {
+    .txTable-title {
+        border: 1px solid var(--light-color);
+        padding: 10px 10px;
+        border-bottom: none;
 
+        h6 {
+            font-size: 24px;
+            display: inline-block;
+            border-bottom: 2px solid var(--light-color);
+        }
+    }
+
+    .table {
+        border: 1px solid var(--light-color);
+        .wallet_address{
+            color: var(--light-color);
+        }
         thead,
         tbody {
             tr {
