@@ -20,6 +20,7 @@ const TxTable = ({ sentTxn, setNewState }) => {
             const challenge = await CONTRACT_INSTANCE.methods.revertTransaction(id).send({ from: address });
             setUpdateValue(true)
             setNewState(true)
+            console.log("challenge", challenge);
         } catch (error) {
             console.log(error);
         }
@@ -67,7 +68,7 @@ const TxTable = ({ sentTxn, setNewState }) => {
                                     transaction.map((event, key) => {
                                         const { recipient, challengeEndTime, isExpired, id, amount, isCompleted } = event
                                         const timeToString = challengeEndTime.toString()
-                                        const timeToNumber = Number(timeToString) * 1000
+                                        const timeToNumber = Number(timeToString) * 1000;
                                         const convertTime = new Date(timeToNumber).toLocaleString('en-US')
                                         return (
                                             <tr key={key}>

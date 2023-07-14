@@ -71,7 +71,7 @@ const Home = () => {
     //=========================================================== SEND FUNDS =============================================================
 
     async function sendETH() {
-        try {
+        try {   
             const toWaiValue = toWei(ethValue)
             console.log(toWaiValue, address);
             const send = await CONTRACT_INSTANCE.methods.sendFunds(recipient).send({ from: address, value: toWaiValue })
