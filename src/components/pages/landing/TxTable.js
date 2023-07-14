@@ -46,7 +46,6 @@ const TxTable = ({ sentTxn, setNewState }) => {
     //--------------------------------------------------------------------------------------------------------------------------
     return (
         <>
-            {/* <sendState.Provider value={updateValue}> */}
                 <section className="txTable_wrap">
                     <Container fluid>
                         <div className="txTable-title">
@@ -86,9 +85,7 @@ const TxTable = ({ sentTxn, setNewState }) => {
                         </Table>
                     </Container>
                 </section>
-            {/* </sendState.Provider> */}
         </>
     )
 }
 export default TxTable
-// export {sendState}
