@@ -7,7 +7,7 @@ import Claim from "./components/pages/claim/Index"
 function App() {
   return (
     <>
-      <BrowserRouter basename="/challenge">
+      <BrowserRouter>
         <Header />
         <main className="main_wrap">
           <Routes>
