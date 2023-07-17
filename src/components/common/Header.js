@@ -10,6 +10,7 @@ import { MdContentCopy } from "react-icons/md"
 import { AiOutlineDownload, AiOutlineUpload } from "react-icons/ai"
 import { useDisconnect } from 'wagmi'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+
 const HeaderNew = () => {
     const [copyTextSourceCode, setCopyTextSourceCode] = useState("Copy address to clipboard")
     const { address, isConnected } = useAccount();
@@ -17,6 +18,15 @@ const HeaderNew = () => {
     const { disconnect } = useDisconnect()
     const { connect } = useConnect({
         connector: new InjectedConnector({ chains }),
+        onMutate(args) {
+            console.log('Mutate', args)
+        },
+        onSettled(data, error) {
+            console.log('Settled', { data, error })
+        },
+        onSuccess(data) {
+            console.log('Success', data)
+        },
     })
     const handleDisconnect = async () => {
         try {
@@ -28,6 +38,7 @@ const HeaderNew = () => {
     }
     const handleSourceCopy = () => {
         if (copyTextSourceCode === "Copy address to clipboard") {
+            setCopyTextSourceCode("Copied!")
         }
     }
     const renderTooltip = (props) => (
@@ -55,6 +66,8 @@ const HeaderNew = () => {
             switchNetwork(90001)
         }
     }, [chain])
+
+
     return (
         <>
             <header className='app_header'>
@@ -98,7 +111,7 @@ const HeaderNew = () => {
                                                     </OverlayTrigger>
                                                     </h4>
                                                 </div>
-                                                <Dropdown.Item as={Link} to="/claim"><AiOutlineDownload /> View History</Dropdown.Item>
+                                                <Dropdown.Item as={Link} to="/claim"><AiOutlineDownload /> View Claim</Dropdown.Item>
                                                 <Dropdown.Item onClick={() => handleDisconnect()}><BiPowerOff /> Disconnect</Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown>

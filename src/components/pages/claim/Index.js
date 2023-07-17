@@ -5,6 +5,7 @@ import Web3 from "web3";
 import { AiOutlineCheck } from "react-icons/ai";
 import "../../../assets/style/pages/claim/claim.scss";
 import { Container, Button, Table } from "react-bootstrap";
+import Loader from '../../common/Loader';
 const Index = () => {
 
   //============================================================== HOOKS ===============================================================
@@ -12,6 +13,9 @@ const Index = () => {
   const web3 = new Web3(window.ethereum)
   const [receiverTxn, setReceiverTxn] = useState([])
   const { address } = useAccount();
+  const [transaction, setTransaction] = useState([])
+  const [updateValue, setUpdateValue] = useState(false)
+  const [loader, setLoader] = useState(NaN)
   useEffect(() => {
     received()
   }, [claimStatus, address])
@@ -43,11 +47,45 @@ const Index = () => {
 
   //=========================================================== CLAIM TRANSACTION =============================================================
 
-  async function claim(id) {
-    const claimTxn = await CONTRACT_INSTANCE.methods.claimFunds(id).send({ from: address })
-    console.log({ claimTxn });
-    setClaimStatus(true)
+  async function claim(e, id) {
+    try {
+      const dataValue =  e.target.getAttribute('data-value')
+      console.log("dataValue", dataValue);
+      setLoader(dataValue)
+      const claimTxn = await CONTRACT_INSTANCE.methods.claimFunds(id).send({ from: address })
+      console.log({ claimTxn });
+      setUpdateValue(true)
+      setClaimStatus(true)
+      setLoader(NaN)
+    } catch (error) {
+      setLoader(NaN)
+      console.log(error);
+    }
   }
+
+
+
+  useEffect(() => {
+    console.log("inner data");
+    const currentDateTime = new Date().toLocaleString('en-US');
+    const newArray = receiverTxn.map(v => ({ ...v, isClaimable: false, inChallenge: false }))
+    newArray.forEach(function (a) {
+      if (a.isCompleted == false && a.isReverted == false) {
+        const timeToString = a.challengeEndTime.toString()
+        const timeToNumber = Number(timeToString) * 1000;
+        const convertTime = new Date(timeToNumber).toLocaleString('en-US')
+        if (currentDateTime > convertTime) {
+          a.isClaimable = true;
+        } else {
+          a.inChallenge = true;
+        }
+        // if (currentDateTime < convertTime) {
+
+        // }
+      }
+    })
+    setTransaction(newArray.reverse())
+  }, [receiverTxn, updateValue])
 
   //--------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -70,8 +108,8 @@ const Index = () => {
             </thead>
             <tbody>
               {
-                receiverTxn.map((event, key) => {
-                  const { sender, challengeEndTime, id, amount, isCompleted } = event
+                transaction.map((event, key) => {
+                  const { sender, challengeEndTime, id, amount, isReverted, isCompleted, isClaimable, inChallenge } = event
                   const timeToString = challengeEndTime.toString()
                   const timeToNumber = Number(timeToString) * 1000
                   const convertTime = new Date(timeToNumber).toLocaleString('en-US')
@@ -80,8 +118,21 @@ const Index = () => {
                       <td>{sender}</td>
                       <td>{convertTime}</td>
                       <td>{Web3.utils.fromWei(amount, "ether").toString()} ETH</td>
-                      <td>{isCompleted ? "Claimed" : "Not claimed"}</td>
-                      <td>{!isCompleted ? <div className="challenge_btn_wrap"><Button type="button" className="btn challenge_btn" onClick={() => claim(id)}>Claim</Button></div> :<span className='checkIcn'><AiOutlineCheck /></span>}</td>
+                      <td>{isReverted ? "Challenged" : "Not Challenged"}</td>
+                      <td>
+                        {
+                          isClaimable ? loader == key ?
+                            <div className="challenge_btn_wrap">
+                              <Button type="button" className="btn challenge_btn" disabled><Loader /></Button>
+                            </div>
+                            :
+                            <div className="challenge_btn_wrap">
+                              <Button type="button" className="btn challenge_btn" data-value={key} onClick={(e) => claim(e,id)}>Claim</Button>
+                            </div>
+                            :
+                            inChallenge ? "In challenge period" : <span className='checkIcn'><AiOutlineCheck /></span>
+                        }
+                      </td>
                     </tr>
                   )
                 })
