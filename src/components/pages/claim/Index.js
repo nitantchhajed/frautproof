@@ -79,9 +79,7 @@ const Index = () => {
         } else {
           a.inChallenge = true;
         }
-        // if (currentDateTime < convertTime) {
 
-        // }
       }
     })
     setTransaction(newArray.reverse())
