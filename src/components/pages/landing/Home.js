@@ -141,6 +141,8 @@ const Home = () => {
                         const toWaiValue = toWei(ethValue)
                         setLoader(true)
                         const send = await CONTRACT_INSTANCE.methods.sendFunds(recipient, weekValue).send({ from: address, value: toWaiValue })
+                        setEthValue("")
+                        setRecipient("")
                         setLoader(false)
                         setSendStatus(true)
                     }
