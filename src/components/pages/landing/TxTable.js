@@ -14,25 +14,25 @@ const TxTable = ({ sentTxn, setNewState }) => {
     const CONTRACT_INSTANCE = new web3.eth.Contract(challengeABI, contractAddress)
     const [transaction, setTransaction] = useState([])
     const [updateValue, setUpdateValue] = useState(false)
-    const [loader, setLoader] = useState(false)
+    const [loader, setLoader] = useState(NaN)
     //======================================================== REVERT TRANSACTION =============================================
 
-    const challengeTxn = async (id) => {
+    const challengeTxn = async (e, id) => {
         try {
-            setLoader(true)
+            const index = e.target.getAttribute('data-value')
+            setLoader(index)
             const challenge = await CONTRACT_INSTANCE.methods.revertTransaction(id).send({ from: address });
             setUpdateValue(true)
             setNewState(true)
-            setLoader(false)
+            setLoader(NaN)
             console.log("challenge", challenge);
         } catch (error) {
-            setLoader(false)
+            setLoader(NaN)
             console.log(error);
         }
     }
 
     useEffect(() => {
-        console.log("inner data");
         const currentDateTime = new Date().toLocaleString('en-US');
         const newArray = sentTxn.map(v => ({ ...v, isExpired: false }))
         newArray.forEach(function (a) {
@@ -51,24 +51,26 @@ const TxTable = ({ sentTxn, setNewState }) => {
     //--------------------------------------------------------------------------------------------------------------------------
     return (
         <>
-                <section className="txTable_wrap">
-                    <Container fluid>
-                        <div className="txTable-title">
-                            <h6 className="text-light">SENT TRANSACTIONS</h6>
-                        </div>
-                        <Table responsive>
-                            <thead>
-                                <tr>
-                                    <th>Recipient</th>
-                                    <th>Challenge End Time</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
+            <section className="txTable_wrap">
+                <Container fluid>
 
+                    <div className="txTable-title">
+                        <h6 className="text-light">SENT TRANSACTIONS</h6>
+                    </div>
+
+                    <Table responsive>
+                        <thead>
+                            <tr>
+                                <th>Recipient</th>
+                                <th>Challenge End Time</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {transaction.length > 0 ?
                                 transaction.map((event, key) => {
                                     const { recipient, challengeEndTime, isExpired, id, amount, isCompleted } = event
                                     const timeToString = challengeEndTime.toString()
@@ -80,16 +82,35 @@ const TxTable = ({ sentTxn, setNewState }) => {
                                             <td>{convertTime}</td>
                                             <td>{Web3.utils.fromWei(amount, "ether").toString()} ETH</td>
                                             <td>{isCompleted ? "Challenged" : "Not Challenged"}</td>
-                                            <td>{isCompleted ? <span className='checkIcn'><AiOutlineCheck /></span> : isExpired ? "Expired" : loader ? <div className="challenge_btn_wrap"> <Button type="button" className="btn challenge_btn" disabled><Loader /></Button></div>:  <div className="challenge_btn_wrap"><Button type="button" className="btn challenge_btn" onClick={() => challengeTxn(id)}>Challenge</Button></div>}</td>
+                                            <td>
+                                                {
+                                                    isCompleted ? <span className='checkIcn'><AiOutlineCheck /></span> :
+                                                        isExpired ? "Expired" :
+                                                            loader == key ?
+                                                                <div className="challenge_btn_wrap">
+                                                                    <Button type="button" className="btn challenge_btn" disabled><Loader /></Button>
+                                                                </div> :
+                                                                <div className="challenge_btn_wrap">
+                                                                    <Button type="button" className="btn challenge_btn" data-value={key} onClick={(e) => challengeTxn(e, id)}>Challenge</Button>
+                                                                </div>
+                                                }
+                                            </td>
                                         </tr>
                                     )
                                 })
-                            }
 
-                            </tbody>
-                        </Table>
-                    </Container>
-                </section>
+                                : <tr>
+                                    <td colSpan={5}>
+                                        <div className="text-center text-light"><h3>No Transaction Available</h3></div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </Table>
+
+
+                </Container>
+            </section>
         </>
     )
 }

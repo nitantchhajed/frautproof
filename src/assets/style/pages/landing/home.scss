@@ -58,7 +58,7 @@
         width: 100%;
         height: 50px;
         border: 1px solid var(--primary-color);
-
+        background-image: url("../../../images/down.svg");
         &:focus {
           background-color: var(--secondary-color);
           box-shadow: none;
@@ -90,6 +90,9 @@
         background-color: var(--button-color);
         border-color: var(--button-color);
 
+      }
+      img{
+        width: 20px;
       }
     }
   }

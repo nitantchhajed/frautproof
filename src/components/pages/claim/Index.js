@@ -49,7 +49,7 @@ const Index = () => {
 
   async function claim(e, id) {
     try {
-      const dataValue =  e.target.getAttribute('data-value')
+      const dataValue = e.target.getAttribute('data-value')
       console.log("dataValue", dataValue);
       setLoader(dataValue)
       const claimTxn = await CONTRACT_INSTANCE.methods.claimFunds(id).send({ from: address })
@@ -105,7 +105,7 @@ const Index = () => {
               </tr>
             </thead>
             <tbody>
-              {
+              {transaction.length > 0 ?
                 transaction.map((event, key) => {
                   const { sender, challengeEndTime, id, amount, isReverted, isCompleted, isClaimable, inChallenge } = event
                   const timeToString = challengeEndTime.toString()
@@ -125,7 +125,7 @@ const Index = () => {
                             </div>
                             :
                             <div className="challenge_btn_wrap">
-                              <Button type="button" className="btn challenge_btn" data-value={key} onClick={(e) => claim(e,id)}>Claim</Button>
+                              <Button type="button" className="btn challenge_btn" data-value={key} onClick={(e) => claim(e, id)}>Claim</Button>
                             </div>
                             :
                             inChallenge ? "In challenge period" : <span className='checkIcn'><AiOutlineCheck /></span>
@@ -134,6 +134,11 @@ const Index = () => {
                     </tr>
                   )
                 })
+                : <tr>
+                  <td colSpan={5}>
+                    <div className="text-center text-light"><h3>No Transaction Available</h3></div>
+                  </td>
+                </tr>
               }
 
             </tbody>

@@ -10,19 +10,26 @@ import { MdContentCopy } from "react-icons/md"
 import { AiOutlineDownload, AiOutlineUpload } from "react-icons/ai"
 import { useDisconnect } from 'wagmi'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-
+import metamask from "../../assets/images/metamask.svg"
 const HeaderNew = () => {
     const [copyTextSourceCode, setCopyTextSourceCode] = useState("Copy address to clipboard")
     const { address, isConnected } = useAccount();
     const { chain, chains } = useNetwork()
+    const [checkMetaMask, setCheckMetaMask] = useState(false);
     const { disconnect } = useDisconnect()
     const { connect } = useConnect({
         connector: new InjectedConnector({ chains }),
         onMutate(args) {
             console.log('Mutate', args)
+            if (args.connector.ready === true) {
+                setCheckMetaMask(false)
+            } else {
+                setCheckMetaMask(true)
+            }
         },
         onSettled(data, error) {
             console.log('Settled', { data, error })
+
         },
         onSuccess(data) {
             console.log('Success', data)
@@ -46,26 +53,31 @@ const HeaderNew = () => {
             {copyTextSourceCode}
         </Tooltip>
     );
-    const { switchNetwork } = useSwitchNetwork({
-        throwForSwitchChainNotSupported: true,
-        onError(error) {
-            console.log('Error', error)
-        },
-        onMutate(args) {
-            console.log('Mutate', args)
-        },
-        onSettled(data, error) {
-            console.log('Settled', { data, error })
-        },
-        onSuccess(data) {
-            console.log('Success', data)
-        },
-    })
-    useEffect(() => {
-        if (chain?.id !== 90001) {
-            switchNetwork(90001)
-        }
-    }, [chain])
+    // const { switchNetwork } = useSwitchNetwork({
+    //     throwForSwitchChainNotSupported: true,
+    //     onError(error) {
+    //         console.log('Error', error)
+    //         if (error) {
+    //             setCheckMetaMask(false)
+    //         } else {
+    //             setCheckMetaMask(true)
+    //         }
+    //     },
+    //     onMutate(args) {
+    //         console.log('Mutate', args)
+    //     },
+    //     onSettled(data, error) {
+    //         console.log('Settled', { data, error })
+    //     },
+    //     onSuccess(data) {
+    //         console.log('Success', data)
+    //     },
+    // })
+    // useEffect(() => {
+    //     if (chain?.id !== 90001) {
+    //         switchNetwork(90001)
+    //     }
+    // }, [chain])
 
 
     return (
@@ -85,7 +97,7 @@ const HeaderNew = () => {
                             >
                             </Nav>
 
-                            {
+                            {checkMetaMask  ? <a className='btn header_btn metamask' href='https://metamask.io/' target='_blank'><Image src={metamask} alt="metamask icn" fluid /> Please Install Metamask Wallet</a> :
                                 !isConnected ?
                                     <div className='header_btn_wrap'>
                                         <button className='btn disconnect_btn header_btn me-2' onClick={() => connect()}>Connect Wallet</button>
