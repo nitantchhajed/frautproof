@@ -32,7 +32,7 @@ const Index = () => {
   //=========================================================== RECEIVER TRANSACTION DATA =============================================================
 
   const received = async () => {
-    const receiverData = await CONTRACT_INSTANCE.methods.viewTransactionsByRecipient().call({ from: address })
+    const receiverData = await CONTRACT_INSTANCE.methods.viewTransactionsByRecipient().call({from: address})
     let receivedTxnData = []
     for (let index = 0; index < receiverData.length; index++) {
       const element = receiverData[index];
@@ -63,6 +63,7 @@ const Index = () => {
     }
   }
 
+  //--------------------------------------------------------------------------------------------------------------------------------------------
 
 
   useEffect(() => {
